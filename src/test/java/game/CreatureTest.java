@@ -33,8 +33,6 @@ class CreatureTest {
         creature.z = 0;
     }
 
-    // modifyHp tests go here
-
     @ParameterizedTest(name = "[{index}] pre={0}, amount={1} -> hp={2}, dead={3}")
     @DisplayName("modifyHp results in expected HP and death state")
     @CsvSource({
@@ -60,4 +58,21 @@ class CreatureTest {
         assertEquals(expectedDead, CombatRules.isDead(creature.hp()), "death state after modifyHp");
     }
 
+
+    @ParameterizedTest(name = "[{index}] amount={0} -> corpse left={1}")
+    @DisplayName("modifyHp leaves a corpse only when the creature dies")
+    @CsvSource({
+    // amount, expectedCorpse
+    "-99,   false",   // HP 1: alive, so the death block must NOT run
+    "-100,  true",    // HP 0: dead, so the death block MUST run
+})
+void modifyHp_leavesCorpseOnlyWhenDead(int amount, boolean expectedCorpse) {
+    creature.modifyHp(amount, "test");
+
+    Item itemAtFeet = world.item(1, 1, 0);
+
+    assertEquals(expectedCorpse, itemAtFeet != null, "corpse present at creature's position");
+    if (expectedCorpse)
+        assertEquals("josh corpse", itemAtFeet.name());
+}
 }
