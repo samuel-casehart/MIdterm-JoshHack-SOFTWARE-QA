@@ -79,6 +79,20 @@
                     </excludedClasses>
                 </configuration>
             </plugin>
+
+            <!-- SpotBugs static analysis (SARIF output for GitHub Code Scanning) -->
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.10.5.0</version>
+                <configuration>
+                    <effort>Max</effort>
+                    <threshold>Low</threshold>
+                    <xmlOutput>true</xmlOutput>
+                    <sarifOutput>true</sarifOutput>
+                    <failOnError>false</failOnError>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
